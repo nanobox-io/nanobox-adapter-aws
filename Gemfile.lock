@@ -1,0 +1,43 @@
+PATH
+  remote: .
+  specs:
+    ec2 (0.1.0)
+      right_aws_api
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    json (2.0.2)
+    libxml-ruby (2.9.0)
+    net-http-persistent (2.9.4)
+    rack (1.6.5)
+    rack-protection (1.5.3)
+      rack
+    rake (12.0.0)
+    redcarpet (3.4.0)
+    right_aws_api (0.3.5)
+      right_cloud_api_base (>= 0.2.6)
+    right_cloud_api_base (0.2.6)
+      json (>= 1.0.0)
+      libxml-ruby (>= 1.0.0)
+      net-http-persistent (~> 2.9)
+      redcarpet (>= 3.0.0)
+      ruby-hmac (>= 0.4.0)
+    ruby-hmac (0.4.0)
+    sinatra (1.4.7)
+      rack (~> 1.5)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
+    tilt (2.0.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler
+  ec2!
+  rake
+  sinatra
+
+BUNDLED WITH
+   1.12.5

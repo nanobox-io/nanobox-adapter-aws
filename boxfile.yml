@@ -1,0 +1,8 @@
+run.config:
+  engine: ruby
+  
+  extra_packages:
+    - libxml2
+    
+  extra_path_dirs:
+    - /app/bin
