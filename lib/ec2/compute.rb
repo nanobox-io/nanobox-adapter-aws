@@ -15,8 +15,7 @@ class ::EC2::Compute
     filter = [{'Name'  => 'tag:Nanobox', 'Value' => 'true'}]
     
     # query the api
-    # res = manager.DescribeInstances('Filter' => filter)
-    res = manager.DescribeInstances()
+    res = manager.DescribeInstances('Filter' => filter)
     
     # extract the instance collection
     instances = res["DescribeInstancesResponse"]["reservationSet"]
@@ -24,9 +23,18 @@ class ::EC2::Compute
     # short-circuit if the collection is empty
     return [] if instances.nil?
     
+    # instances might not be a collection, but a single item
+    collection = begin
+      if instances['item'].is_a? Array
+        instances['item']
+      else
+        [instances['item']]
+      end
+    end
+    
     # grab the instances and process them
-    instances["item"].each do |instances|
-      list << process_instance(instances["instancesSet"]["item"])
+    collection.each do |instance|
+      list << process_instance(instance["instancesSet"]["item"])
     end
     
     list
@@ -48,23 +56,64 @@ class ::EC2::Compute
   
   # Run an on-demand compute instance
   # 
+  # attrs:
+  #   name:               nanobox-specific name of instance
+  #   size:               instance type/size (t2.micro etc)
+  #   disk:               size of disk for ebs volume
+  #   availability_zone:  availability zone to run instance on
+  #   key:                id of ssh key
+  #   security_group:     id of security group
   def run_instance(attrs)
-    manager.RunInstances(
+    
+    attrs = {
+      name: 'ec2.5',
+      size: 't2.micro',
+      disk: 20,
+      availability_zone: 'us-west-2a',
+      key: 'test-ubuntu',
+      security_group: 'sg-2d00d248'
+    }
+    
+    # launch the instance
+    res = manager.RunInstances(
       'ImageId'            => 'ami-b7a114d7',
       'MinCount'           => 1,
       'MaxCount'           => 1,
-      'KeyName'            => 'test-ubuntu',
-      'InstanceType'       => 't2.micro',
-      'SecurityGroupId'    => ['sg-2d00d248'],
+      'KeyName'            => attrs[:key],
+      'InstanceType'       => attrs[:size],
+      'SecurityGroupId'    => [attrs[:security_group]],
       'Placement'          => {
-         'AvailabilityZone' => 'us-west-2a',
+         'AvailabilityZone' => attrs[:availability_zone],
          'Tenancy'          => 'default' },
       'BlockDeviceMapping' => [
         { 'DeviceName' => '/dev/sda1',
           'Ebs'        => {
-           'VolumeSize'          => 10,
+           'VolumeSize'          => attrs[:disk],
            'DeleteOnTermination' => true}} ]
     )
+    
+    # extract the instance
+    instance = process_instance(res["RunInstancesResponse"]["instancesSet"]["item"])
+    
+    # set tags
+    res = manager.CreateTags(
+      'ResourceId'  => instance[:id],
+      'Tag' => [
+        {
+          'Key' => 'Nanobox',
+          'Value' => 'true'
+        },
+        {
+          'Key' => 'Nanobox-Name',
+          'Value' => attrs[:name]
+        }
+      ]
+    )
+    
+    # now update the name and return it
+    instance.tap do |i|
+      i[:name] = attrs[:name]
+    end
   end
   
   private
@@ -72,7 +121,7 @@ class ::EC2::Compute
   def process_instance(data)
     {
       id: data['instanceId'],
-      name: (process_tag(data['tagSet']['item'], 'Nanobox-Name') rescue ''),
+      name: (process_tag(data['tagSet']['item'], 'Nanobox-Name') rescue 'unknown'),
       status: data['instanceState']['name'],
       external_ip: data['ipAddress'],
       internal_ip: data['privateIpAddress']

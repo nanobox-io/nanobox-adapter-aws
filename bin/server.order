@@ -12,4 +12,11 @@ endpoint   = ARGV.first || 'us-west-2'
 
 client = ::EC2::Client.new(key_id, access_key, endpoint)
 
-puts client.server_order({}).inspect
+server = client.server_order({})
+
+puts "#{server[:name]} : 
+  id          : #{server[:id]}
+  status      : #{server[:status]}
+  external_ip : #{server[:external_ip]}
+  internal_ip : #{server[:internal_ip]}
+  "
