@@ -11,7 +11,6 @@ class ::EC2::Compute
     list = []
     
     # filter the collection to just nanobox instances
-    # todo: probably should filter to just the app instances
     filter = [{'Name'  => 'tag:Nanobox', 'Value' => 'true'}]
     
     # query the api
@@ -65,15 +64,6 @@ class ::EC2::Compute
   #   security_group:     id of security group
   def run_instance(attrs)
     
-    attrs = {
-      name: 'ec2.5',
-      size: 't2.micro',
-      disk: 20,
-      availability_zone: 'us-west-2a',
-      key: 'test-ubuntu',
-      security_group: 'sg-2d00d248'
-    }
-    
     # launch the instance
     res = manager.RunInstances(
       'ImageId'            => 'ami-b7a114d7',
@@ -114,6 +104,12 @@ class ::EC2::Compute
     instance.tap do |i|
       i[:name] = attrs[:name]
     end
+  end
+  
+  def terminate_instance(id)
+    # todo: catch error?
+    res = manager.TerminateInstances( "InstanceId" => id )
+    res["TerminateInstancesResponse"]["instancesSet"]["item"]["currentState"]["name"]
   end
   
   private

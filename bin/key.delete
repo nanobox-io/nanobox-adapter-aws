@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+require 'bundler/setup'
+require 'ec2'
+
+# meta
+key_id     = ENV['AWS_ACCESS_KEY_ID']
+access_key = ENV['AWS_SECRET_ACCESS_KEY']
+endpoint   = 'us-west-2'
+
+id = ARGV.first
+
+client = ::EC2::Client.new(key_id, access_key, endpoint)

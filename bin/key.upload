@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+require 'bundler/setup'
+require 'ec2'
+
+# meta
+key_id     = ENV['AWS_ACCESS_KEY_ID']
+access_key = ENV['AWS_SECRET_ACCESS_KEY']
+endpoint   = ARGV.first || 'us-west-2'
+
+client = ::EC2::Client.new(key_id, access_key, endpoint)
+
+name = "#{`whoami`.strip}s-key"
+key = ::File.read "#{ENV['HOME']}/.ssh/id_rsa.pub"
+
+key = client.key_create(name, key)
+
+puts "#{key[:id]} : 
+  name        : #{key[:name]}
+  fingerprint : #{key[:fingerprint]}
+  "

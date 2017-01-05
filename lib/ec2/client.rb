@@ -17,19 +17,23 @@ class ::EC2::Client
   end
   
   def keys
-    
+    ssh = ::EC2::SSH.new(manager)
+    ssh.keys
   end
   
   def key(id)
-    
+    ssh = ::EC2::SSH.new(manager)
+    ssh.key(id)
   end
   
-  def key_create(id, public_key)
-    
+  def key_create(name, public_key)
+    ssh = ::EC2::SSH.new(manager)
+    ssh.import_key(name, public_key)
   end
   
   def key_delete(id)
-    
+    ssh = ::EC2::SSH.new(manager)
+    ssh.delete_key(id)
   end
   
   def servers
@@ -53,13 +57,25 @@ class ::EC2::Client
     # lookup the disk size from the 'size' in catalog
     
     # find or create a nanobox security group
+    security = ::EC2::Security.new(manager)
+    group = security.group
+
+    meta = {
+      name: attrs['name'] || 'ec2.5',
+      size: 't2.micro',
+      disk: 20,
+      availability_zone: 'us-west-2a',
+      key: 'test-ubuntu',
+      security_group: group[:id]
+    }
     
     compute = ::EC2::Compute.new(manager)
-    compute.run_instance(attrs)
+    compute.run_instance(meta)
   end
   
   def server_delete(id)
-    
+    compute = ::EC2::Compute.new(manager)
+    compute.terminate_instance(id)
   end
   
   def server_reboot(id)
