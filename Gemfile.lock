@@ -2,13 +2,17 @@ PATH
   remote: .
   specs:
     ec2 (0.1.0)
+      faraday
       right_aws_api
 
 GEM
   remote: https://rubygems.org/
   specs:
+    faraday (0.10.1)
+      multipart-post (>= 1.2, < 3)
     json (2.0.2)
     libxml-ruby (2.9.0)
+    multipart-post (2.0.0)
     net-http-persistent (2.9.4)
     rack (1.6.5)
     rack-protection (1.5.3)
