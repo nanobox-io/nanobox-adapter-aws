@@ -31,13 +31,13 @@ module ::EC2::Catalog
     # Here we go...
     
     # grab the ec2 instances pricing structure dump
-    plans = self.ec2_instances_info
+    options = self.ec2_instances_info
     
     # first setup the datacenter region structures (later, we'll convert to a list)
-    regions = {}
+    dcs = {}
     
     ::EC2::REGIONS.each do |region|
-      regions[region[:id]] = {
+      dcs[region[:id]] = {
         id: region[:id],
         name: region[:name],
         plans: {} # (later we'll convert this to a list)
@@ -45,15 +45,16 @@ module ::EC2::Catalog
     end
     
     # now let's iterate through the dump data and set plans
-    plans.each do |plan|
-      plan['pricing'].each_pair do |region, platform|
+    # pricing -> ap-south-1 -> linux -> ondemand
+    options.each do |option|
+      option['pricing'].each_pair do |region, platform|
         
         # extract the pieces
-        family        = plan['family']
-        family_name   = plan['pretty_name']
-        instance_type = plan['instance_type']
-        vcpu          = plan['vCPU']
-        memory        = plan['memory']
+        family        = option['family']
+        family_id     = family.downcase.gsub(/ /, '_')
+        instance_type = option['instance_type']
+        vcpu          = option['vCPU']
+        memory        = option['memory']
         hourly_price  = platform['linux']['ondemand'] rescue 'N/A'
         
         # short-circuit if there's no pricing for this plan
@@ -61,15 +62,45 @@ module ::EC2::Catalog
           next
         end
         
-        # 1 - add the plan (Family) to the regions dataset if it doesn't exist
-        if regions[region][:plans][region].nil?
-          
+        # grab the datacenter
+        dc = dcs[region]
+        
+        # if we stumble upon a region that we don't support (gov) then move on
+        if dc.nil?
+          next
         end
         
+        # grab the existing plan or create a new one
+        plan = begin
+          dc[:plans][family_id] || {
+            id: family_id,
+            name: family,
+            specs: []
+          }
+        end
+
+        # create the spec
+        spec = {
+          id: instance_type,
+          ram: memory,
+          cpu: vcpu,
+          disk: '',
+          transfer: 'unlimited',
+          dollars_per_hr: hourly_price,
+          dollars_per_mo: ''
+        }
+        
+        # add the spec to the plan
+        plan[:specs] << spec
+        
+        # add the plan back to the dc
+        dc[:plans][family_id] = plan
       end
     end
     
-    regions
+    # convert regions/plans from hashes to lists
+    
+    dcs
   end
   
   protected

@@ -5,4 +5,4 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 require 'bundler/setup'
 require 'ec2'
 
-puts ::EC2::Catalog.generate
+puts ::EC2::Catalog.generate.to_json
