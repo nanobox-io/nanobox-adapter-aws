@@ -8,9 +8,9 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    faraday (0.10.1)
+    faraday (0.11.0)
       multipart-post (>= 1.2, < 3)
-    json (2.0.2)
+    json (2.0.3)
     libxml-ruby (2.9.0)
     multipart-post (2.0.0)
     net-http-persistent (2.9.4)

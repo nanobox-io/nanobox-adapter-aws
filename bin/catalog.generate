@@ -5,10 +5,14 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 require 'bundler/setup'
 require 'ec2'
 
+# generate the catalog
+::EC2::Catalog.generate
+
+# try to fetch the catalog
 data = ::EC2::Catalog.fetch
 
 if data.nil?
-  puts "Error: The catalog needs to be generated first"
+  puts "Error: The catalog doesn't seem to have generated properly"
 else
-  puts JSON.parse(data).first.to_json
+  puts "Success: The catalog has been generated"
 end
