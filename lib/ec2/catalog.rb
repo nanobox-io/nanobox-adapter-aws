@@ -67,6 +67,17 @@ module ::EC2::Catalog
         disk          = calculate_disk(memory)
         hourly_price  = platform['linux']['ondemand'].to_f rescue 'N/A'
         monthly_price = hourly_price * 720 rescue 'N/A'
+
+        # if this is micro, let's combine with General purpose
+        if family_id == 'micro'
+          family    = 'General purpose'
+          family_id = 'general_purpose'
+        end
+
+        # let's skip GPU
+        if family_id == 'gpu_instances'
+          next
+        end
         
         # adjust the hourly/monthly prices to reflect disk prices
         if hourly_price != 'N/A'
