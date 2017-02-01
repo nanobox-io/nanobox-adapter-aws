@@ -13,7 +13,10 @@ class ::EC2::Client
   end
   
   def verify
-    "yes"
+    # need to ensure we can run all of the necessary actions
+    # (these will raise an error if they don't have permissions)
+    ::EC2::SSH.new(manager).permission?
+    ::EC2::Compute.new(manager).permission?
   end
   
   def keys
@@ -54,18 +57,27 @@ class ::EC2::Client
   #   size:     the size of server to provision
   #   ssh_key:  id of the SSH key
   def server_order(attrs)
+    name = attrs['name'] || 'ec2.5'
+    size = attrs['size'] || 't2.nano'
+    key  = attrs['ssh_key'] || 'test-ubuntu'
+    
     # lookup the disk size from the 'size' in catalog
+    disk = ::EC2::Catalog.cache()[size]['disk']
+    
+    # lookup the availability_zone
+    # todo: make this round-robin between availability zones
+    az = ::EC2::REGIONS[attrs['region']][:availability_zones].first
     
     # find or create a nanobox security group
     security = ::EC2::Security.new(manager)
     group = security.group
 
     meta = {
-      name: attrs['name'] || 'ec2.5',
-      size: 't2.micro',
-      disk: 20,
-      availability_zone: 'us-west-2a',
-      key: 'test-ubuntu',
+      name: name,
+      size: size,
+      disk: disk,
+      availability_zone: az,
+      key: key,
       security_group: group[:id]
     }
     

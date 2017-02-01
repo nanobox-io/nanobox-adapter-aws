@@ -7,6 +7,18 @@ class ::EC2::Compute
     @manager = manager
   end
   
+  def permission?
+    begin
+      manager.DescribeInstances('DryRun' => true)
+      manager.RunInstances('DryRun' => true)
+      manager.TerminateInstances('DryRun' => true)
+    rescue RightScale::CloudApi::HttpError => e
+      if not e.message =~ /DryRunOperation/
+        raise
+      end
+    end
+  end
+  
   def instances
     list = []
     
@@ -118,7 +130,7 @@ class ::EC2::Compute
     {
       id: data['instanceId'],
       name: (process_tag(data['tagSet']['item'], 'Nanobox-Name') rescue 'unknown'),
-      status: data['instanceState']['name'],
+      status: translate_status(data['instanceState']['name']),
       external_ip: data['ipAddress'],
       internal_ip: data['privateIpAddress']
     }
@@ -132,4 +144,14 @@ class ::EC2::Compute
     end
     ''
   end
+  
+  def translate_status(status)
+    case status
+    when 'running'
+      'active'
+    else
+      status
+    end
+  end
+  
 end

@@ -6,6 +6,18 @@ class ::EC2::SSH
     @manager = manager
   end
   
+  def permission?
+    begin
+      manager.DescribeKeyPairs('DryRun' => true)
+      manager.ImportKeyPair('DryRun' => true)
+      manager.DeleteKeyPair('DryRun' => true)
+    rescue RightScale::CloudApi::HttpError => e
+      if not e.message =~ /DryRunOperation/
+        raise
+      end
+    end
+  end
+  
   def keys
     res = manager.DescribeKeyPairs()
     

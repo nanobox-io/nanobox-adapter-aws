@@ -1,7 +1,7 @@
 module ::EC2
   
-  REGIONS = [
-    {
+  REGIONS = {
+    'us-east-1' => {
       id: 'us-east-1', 
       name: 'US East (N. Virginia)',
       short: 'N. Virginia',
@@ -12,7 +12,7 @@ module ::EC2
         'us-east-1e'
       ]
     },
-    {
+    'us-east-2' => {
       id: 'us-east-2',
       name: 'US East (Ohio)',
       short: 'Ohio',
@@ -22,7 +22,7 @@ module ::EC2
         'us-east-2c'
       ]
     },
-    {
+    'us-west-1' => {
       id: 'us-west-1',
       name: 'US West (N. California)',
       short: 'N. California',
@@ -31,7 +31,7 @@ module ::EC2
         'us-west-1c'
       ]
     },
-    {
+    'us-west-2' => {
       id: 'us-west-2',
       name: 'US West (Oregon)',
       short: 'Oregon',
@@ -41,7 +41,7 @@ module ::EC2
         'us-west-2c'
       ]
     },
-    {
+    'ca-central-1' => {
       id: 'ca-central-1',
       name: 'Canada Central (Montreal)',
       short: 'Central',
@@ -50,7 +50,7 @@ module ::EC2
         'ca-central-1b'
       ]
     },
-    {
+    'eu-west-1' => {
       id: 'eu-west-1',
       name: 'EU West (Ireland)',
       short: 'Ireland',
@@ -60,7 +60,7 @@ module ::EC2
         'eu-west-1c'
       ]
     },
-    {
+    'eu-central-1' => {
       id: 'eu-central-1',
       name: 'EU Central (Frankfurt)',
       short: 'Frankfurt',
@@ -69,7 +69,7 @@ module ::EC2
         'eu-central-1b'
       ]
     },
-    {
+    'eu-west-2' => {
       id: 'eu-west-2',
       name: 'EU West (London)',
       short: 'London',
@@ -78,7 +78,7 @@ module ::EC2
         'eu-west-2b'
       ]
     },
-    {
+    'ap-southeast-1' => {
       id: 'ap-southeast-1',
       name: 'Asia Pacific (Singapore)',
       short: 'Singapore',
@@ -87,7 +87,7 @@ module ::EC2
         'ap-southeast-1b'
       ]
     },
-    {
+    'ap-southeast-2' => {
       id: 'ap-southeast-2',
       name: 'Asia Pacific (Sydney)',
       short: 'Sydney',
@@ -95,9 +95,9 @@ module ::EC2
         'ap-southeast-2a',
         'ap-southeast-2b',
         'ap-southeast-2c'
-      ]
+      ]  
     },
-    {
+    'ap-northeast-2' => {
       id: 'ap-northeast-2',
       name: 'Asia Pacific (Seoul)',
       short: 'Seoul',
@@ -106,7 +106,7 @@ module ::EC2
         'ap-northeast-2c'
       ]
     },
-    {
+    'ap-northeast-1' => {
       id: 'ap-northeast-1',
       name: 'Asia Pacific (Tokyo)',
       short: 'Tokyo',
@@ -115,7 +115,7 @@ module ::EC2
         'ap-northeast-1c'
       ]
     },
-    {
+    'ap-south-1' => {
       id: 'ap-south-1',
       name: 'Asia Pacific (Mumbai)',
       short: 'Mumbai',
@@ -124,7 +124,7 @@ module ::EC2
         'ap-south-1b'
       ]
     },
-    {
+    'sa-east-1' => {
       id: 'sa-east-1',
       name: 'South America (São Paulo)',
       short: 'São Paulo',
@@ -134,6 +134,6 @@ module ::EC2
         'sa-east-1c'
       ]
     }
-  ]
+  }
   
 end
