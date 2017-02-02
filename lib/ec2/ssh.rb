@@ -1,3 +1,5 @@
+require 'right_aws_api'
+
 class ::EC2::SSH
   
   attr_reader :manager

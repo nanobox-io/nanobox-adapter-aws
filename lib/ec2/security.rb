@@ -1,3 +1,5 @@
+require 'right_aws_api'
+
 class ::EC2::Security
   
   attr_reader :manager

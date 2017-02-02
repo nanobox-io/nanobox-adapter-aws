@@ -1,7 +1,11 @@
+# add lib to the load path
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 # Set up gems listed in the Gemfile.
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
-
 require 'bundler/setup'
+
 require 'ec2'
 require 'sinatra'
 require 'json'
@@ -10,15 +14,13 @@ if development?
   require 'pry'
 end
 
-Dir["./lib/autoload/*.rb"].each {|file| require file }
-
 set :bind, '0.0.0.0'
 set :show_exceptions, :after_handler
 
 before do
-  if settings.production?
-    redirect request.url.sub('http', 'https') unless request.secure?
-  end
+  # if settings.production?
+  #   redirect request.url.sub('http', 'https') unless request.secure?
+  # end
   content_type 'application/json'
   request.body.rewind
   request_body = request.body.read

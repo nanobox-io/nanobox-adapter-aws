@@ -1,3 +1,4 @@
+require 'right_aws_api'
 
 class ::EC2::Compute
   

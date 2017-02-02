@@ -3,6 +3,12 @@ run.config:
   
   extra_packages:
     - libxml2
+    - nginx
     
   extra_path_dirs:
     - /app/bin
+    
+web.main:
+  start:
+    nginx: nginx -c /app/config/nginx.conf
+    puma: bundle exec puma -C /app/config/puma.rb
