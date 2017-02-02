@@ -18,9 +18,10 @@ set :bind, '0.0.0.0'
 set :show_exceptions, :after_handler
 
 before do
-  # if settings.production?
-  #   redirect request.url.sub('http', 'https') unless request.secure?
-  # end
+  if ENV['FORCE_HTTPS']
+    redirect request.url.sub('http', 'https') unless request.secure?
+  end
+  
   content_type 'application/json'
   request.body.rewind
   request_body = request.body.read
