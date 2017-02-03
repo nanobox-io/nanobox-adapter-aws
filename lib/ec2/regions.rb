@@ -1,5 +1,7 @@
 module ::EC2
   
+  DEFAULT_REGION = 'us-east-1'
+  
   REGIONS = {
     'us-east-1' => {
       id: 'us-east-1', 

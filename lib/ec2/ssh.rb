@@ -22,10 +22,21 @@ class ::EC2::SSH
   
   def keys
     res = manager.DescribeKeyPairs()
+
+    key_set = res["DescribeKeyPairsResponse"]["keySet"]
+    
+    # instances might not be a collection, but a single item
+    collection = begin
+      if key_set['item'].is_a? Array
+        key_set['item']
+      else
+        [key_set['item']]
+      end
+    end
     
     keys = []
     
-    res["DescribeKeyPairsResponse"]["keySet"]["item"].each do |key|
+    collection.each do |key|
       keys << process_key(key)
     end
     

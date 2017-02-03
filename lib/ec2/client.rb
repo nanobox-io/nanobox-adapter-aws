@@ -57,6 +57,9 @@ class ::EC2::Client
   #   size:     the size of server to provision
   #   ssh_key:  id of the SSH key
   def server_order(attrs)
+    
+    puts attrs.inspect
+    
     name = attrs['name'] || 'ec2.5'
     size = attrs['size'] || 't2.nano'
     key  = attrs['ssh_key'] || 'test-ubuntu'

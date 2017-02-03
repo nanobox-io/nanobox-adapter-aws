@@ -57,8 +57,8 @@ end
 
 post '/keys' do
   status 201
-  key_id = client.key_create(@request_payload['id'], @request_payload['key'])
-  { id: key_id.to_s }.to_json
+  key = client.key_create(@request_payload['id'], @request_payload['key'])
+  { id: key['id'] }.to_json
 end
 
 delete '/keys/:id' do
@@ -98,7 +98,7 @@ end
 def client
   key_id     = request.env['HTTP_AUTH_ACCESS_KEY_ID']
   access_key = request.env['HTTP_AUTH_SECRET_ACCESS_KEY']
-  region     = request.env['HTTP_REGION_ID']
+  region     = request.env['HTTP_REGION_ID'] || ::EC2::DEFAULT_REGION
   
   ::EC2::Client.new(key_id, access_key, region)
 end

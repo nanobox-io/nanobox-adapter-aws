@@ -19,7 +19,8 @@ class ::EC2::Meta
           { key: :access_key_id, label: 'Access Key ID' },
           { key: :secret_access_key, label: 'Secret Access Key' }
         ],
-        instructions:      instructions
+        instructions:      instructions,
+        bootstrap_script:  'https://raw.githubusercontent.com/nanobox-io/bootstrap/refactor/expand-platform-support/ubuntu.sh'
       }.to_json
     end
 
