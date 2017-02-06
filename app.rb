@@ -52,13 +52,18 @@ get '/keys' do
 end
 
 get '/keys/:id' do
-  client.key(params['id']).to_json
+  key = client.key(params['id'])
+  if key.nil?
+    status 404
+  else
+    key.to_json
+  end
 end
 
 post '/keys' do
   status 201
   key = client.key_create(@request_payload['id'], @request_payload['key'])
-  { id: key['id'] }.to_json
+  { id: key[:id] }.to_json
 end
 
 delete '/keys/:id' do
@@ -71,7 +76,12 @@ get '/servers' do
 end
 
 get '/servers/:id' do
-  client.server(params['id']).to_json
+  server = client.server(params['id'])
+  if server.nil?
+    status 404
+  else
+    server.to_json
+  end
 end
 
 post '/servers' do

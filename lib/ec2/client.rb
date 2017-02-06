@@ -61,6 +61,9 @@ class ::EC2::Client
     size = attrs['size'] || 't2.nano'
     key  = attrs['ssh_key'] || 'test-ubuntu'
     
+    # lookup the ami from the regions data set
+    ami = ::EC2::REGIONS[attrs['region']][:ami]
+    
     # lookup the disk size from the 'size' in catalog
     disk = ::EC2::Catalog.cache()[size]['disk']
     
@@ -76,6 +79,7 @@ class ::EC2::Client
       name: name,
       size: size,
       disk: disk,
+      ami: ami,
       availability_zone: az,
       key: key,
       security_group: group[:id]

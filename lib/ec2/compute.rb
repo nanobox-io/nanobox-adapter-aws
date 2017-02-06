@@ -72,6 +72,7 @@ class ::EC2::Compute
   #   name:               nanobox-specific name of instance
   #   size:               instance type/size (t2.micro etc)
   #   disk:               size of disk for ebs volume
+  #   ami:                amazon machine image to use to launch instance
   #   availability_zone:  availability zone to run instance on
   #   key:                id of ssh key
   #   security_group:     id of security group
@@ -79,7 +80,7 @@ class ::EC2::Compute
     
     # launch the instance
     res = manager.RunInstances(
-      'ImageId'            => 'ami-b7a114d7',
+      'ImageId'            => attrs[:ami],
       'MinCount'           => 1,
       'MaxCount'           => 1,
       'KeyName'            => attrs[:key],
