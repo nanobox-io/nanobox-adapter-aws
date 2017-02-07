@@ -99,24 +99,8 @@ class ::EC2::Compute
     # extract the instance
     instance = process_instance(res["RunInstancesResponse"]["instancesSet"]["item"])
     
-    # set tags
-    res = manager.CreateTags(
-      'ResourceId'  => instance[:id],
-      'Tag' => [
-        {
-          'Key' => 'Nanobox',
-          'Value' => 'true'
-        },
-        {
-          'Key' => 'Name',
-          'Value' => attrs[:name]
-        },
-        {
-          'Key' => 'Nanobox-Name',
-          'Value' => attrs[:name]
-        }
-      ]
-    )
+    # name the instance
+    set_instance_name(instance[:id], attrs[:name])
     
     # now update the name and return it
     instance.tap do |i|
@@ -128,6 +112,27 @@ class ::EC2::Compute
     # todo: catch error?
     res = manager.TerminateInstances( "InstanceId" => id )
     res["TerminateInstancesResponse"]["instancesSet"]["item"]["currentState"]["name"]
+  end
+  
+  def set_instance_name(id, name)
+    # set tags
+    res = manager.CreateTags(
+      'ResourceId'  => id,
+      'Tag' => [
+        {
+          'Key' => 'Nanobox',
+          'Value' => 'true'
+        },
+        {
+          'Key' => 'Name',
+          'Value' => name
+        },
+        {
+          'Key' => 'Nanobox-Name',
+          'Value' => name
+        }
+      ]
+    )
   end
   
   private

@@ -99,7 +99,8 @@ class ::EC2::Client
   end
   
   def server_rename(id, name)
-    
+    compute = ::EC2::Compute.new(manager)
+    compute.set_instance_name(id, name)
   end
   
   protected
