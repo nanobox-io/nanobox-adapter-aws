@@ -108,6 +108,10 @@ class ::EC2::Compute
           'Value' => 'true'
         },
         {
+          'Key' => 'Name',
+          'Value' => attrs[:name]
+        },
+        {
           'Key' => 'Nanobox-Name',
           'Value' => attrs[:name]
         }
