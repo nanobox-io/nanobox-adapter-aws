@@ -28,7 +28,10 @@ class ::EC2::Meta
 
     def instructions
     <<-INSTR
-TODO: key instructions
+<a href="//console.aws.amazon.com/iam/home#/home" target="_blank">Create
+an IAM Account</a> in your AWS Management Console that has read/write
+access to ec2 instances, security groups, and ssh keys, then add the 
+access key id and access key here.
     INSTR
     end
     
