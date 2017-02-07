@@ -17,6 +17,7 @@ class ::EC2::Client
     # (these will raise an error if they don't have permissions)
     ::EC2::SSH.new(manager).permission?
     ::EC2::Compute.new(manager).permission?
+    ::EC2::Security.new(manager).permission?
   end
   
   def keys

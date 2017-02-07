@@ -8,6 +8,17 @@ class ::EC2::Security
     @manager = manager
   end
   
+  def permission?
+    begin
+      manager.DescribeSecurityGroups('DryRun' => true)
+      manager.CreateSecurityGroup('DryRun' => true)
+    rescue RightScale::CloudApi::HttpError => e
+      if not e.message =~ /DryRunOperation/
+        raise
+      end
+    end
+  end
+  
   def group
     # fetch the group
     sg = fetch_group || create_group
