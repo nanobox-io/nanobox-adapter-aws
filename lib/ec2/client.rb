@@ -96,7 +96,8 @@ class ::EC2::Client
   end
   
   def server_reboot(id)
-    
+    compute = ::EC2::Compute.new(manager)
+    compute.reboot_instance(id)
   end
   
   def server_rename(id, name)

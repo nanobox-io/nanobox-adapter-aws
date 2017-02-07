@@ -108,6 +108,10 @@ class ::EC2::Compute
     end
   end
   
+  def reboot_instance(id)
+    res = manager.RebootInstances( "InstanceId" => id )
+  end
+  
   def terminate_instance(id)
     # todo: catch error?
     res = manager.TerminateInstances( "InstanceId" => id )
