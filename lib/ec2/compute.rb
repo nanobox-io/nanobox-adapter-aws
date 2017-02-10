@@ -139,6 +139,40 @@ class ::EC2::Compute
     )
   end
   
+  def availability_zones
+    # Ultimately, we only want the availability_zones that are available to
+    # this account AND have a default subnet. Querying the subnets for 
+    # default-for-az finds this list pretty quickly
+    
+    # filter the collection to just nanobox instances
+    filter = [{'Name'  => 'default-for-az', 'Value' => 'true'}]
+    
+    # query the api
+    res = manager.DescribeSubnets('Filter' => filter)
+    
+    subnets = res['DescribeSubnetsResponse']['subnetSet']
+    
+    # if we don't have any default subnets, let's return an empty set
+    return [] if subnets.nil?
+    
+    # subnets might not be a collection, but a single item
+    collection = begin
+      if subnets['item'].is_a? Array
+        subnets['item']
+      else
+        [subnets['item']]
+      end
+    end
+    
+    availability_zones = []
+    
+    collection.each do |subnet|
+      availability_zones << subnet['availabilityZone']
+    end
+    
+    availability_zones.uniq.sort
+  end
+  
   private
   
   def process_instance(data)
