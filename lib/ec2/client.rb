@@ -68,9 +68,11 @@ class ::EC2::Client
     # lookup the disk size from the 'size' in catalog
     disk = ::EC2::Catalog.cache()[size]['disk']
     
+    compute = ::EC2::Compute.new(manager)
+    
     # lookup the availability_zone
     # todo: make this round-robin between availability zones
-    az = ::EC2::REGIONS[attrs['region']][:availability_zones].first
+    az = compute.availability_zones.first
     
     # find or create a nanobox security group
     security = ::EC2::Security.new(manager)
@@ -86,7 +88,6 @@ class ::EC2::Client
       security_group: group[:id]
     }
     
-    compute = ::EC2::Compute.new(manager)
     compute.run_instance(meta)
   end
   
@@ -103,6 +104,11 @@ class ::EC2::Client
   def server_rename(id, name)
     compute = ::EC2::Compute.new(manager)
     compute.set_instance_name(id, name)
+  end
+  
+  def availability_zones
+    compute = ::EC2::Compute.new(manager)
+    compute.availability_zones
   end
   
   protected
