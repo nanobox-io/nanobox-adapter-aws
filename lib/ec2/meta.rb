@@ -1,7 +1,7 @@
 
 class ::EC2::Meta
   class << self
-    
+
     def to_json
       {
         id:                'aws',
@@ -20,7 +20,8 @@ class ::EC2::Meta
           { key: :secret_access_key, label: 'Secret Access Key' }
         ],
         instructions:      instructions,
-        bootstrap_script:  'https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ubuntu.sh'
+        bootstrap_script:  'https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ubuntu.sh',
+        ssh_key_method:    'reference'
       }.to_json
     end
 
@@ -30,10 +31,10 @@ class ::EC2::Meta
     <<-INSTR
 <a href="//console.aws.amazon.com/iam/home#/home" target="_blank">Create
 an IAM Account</a> in your AWS Management Console that has read/write
-access to ec2 instances, security groups, and ssh keys, then add the 
+access to ec2 instances, security groups, and ssh keys, then add the
 access key id and access key here.
     INSTR
     end
-    
+
   end
 end
