@@ -6,6 +6,7 @@ class ::EC2::Meta
       {
         id:                'aws',
         name:              'Amazon Web Services',
+        short_name:        'AWS',
         server_nick_name:  'EC2 Instance',
         default_region:    'us-east-1',
         default_plan:      'general_purpose',
