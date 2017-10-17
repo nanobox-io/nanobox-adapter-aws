@@ -92,6 +92,7 @@ class ::EC2::Compute
       'BlockDeviceMapping' => [
         { 'DeviceName' => '/dev/sda1',
           'Ebs'        => {
+           'VolumeType'          => 'gp2',
            'VolumeSize'          => attrs[:disk],
            'DeleteOnTermination' => true}} ]
     )
