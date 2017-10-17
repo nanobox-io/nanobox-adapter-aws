@@ -69,18 +69,44 @@ class ::EC2::Security
   end
   
   def set_inbound_policy(id)
-    res = manager.AuthorizeSecurityGroupIngress(
+    # add inbound policies for tcp and udp
+    ['tcp', 'udp',].each do |protocol|
+      manager.AuthorizeSecurityGroupIngress(
+        'GroupId'     => id,
+        'IpProtocol'  => protocol,
+        'FromPort'    => '0',
+        'ToPort'      => '65535',
+        'CidrIp'      => '0.0.0.0/0'
+      )      
+    end
+    
+    # now allow icmp (ping)
+    manager.AuthorizeSecurityGroupIngress(
       'GroupId'     => id,
-      'IpProtocol'  => '-1',
+      'IpProtocol'  => 'icmp',
       'FromPort'    => '-1',
+      'ToPort'      => '-1',
       'CidrIp'      => '0.0.0.0/0'
-    )
+    ) 
   end
   
   def set_outbound_policy(id)
-    res = manager.AuthorizeSecurityGroupEgress(
+    # add outbound policy for tcp and udp
+    ['tcp', 'udp'].each do |protocol|
+      manager.AuthorizeSecurityGroupEgress(
+        'GroupId'     => id,
+        'IpProtocol'  => protocol,
+        'FromPort'    => '0',
+        'ToPort'      => '65535',
+        'CidrIp'      => '0.0.0.0/0'
+      )
+    end
+    
+    # now allow outbound icmp (ping)
+    manager.AuthorizeSecurityGroupEgress(
       'GroupId'     => id,
-      'IpProtocol'  => '-1',
+      'IpProtocol'  => 'icmp',
+      'FromPort'    => '-1',
       'ToPort'      => '-1',
       'CidrIp'      => '0.0.0.0/0'
     )
