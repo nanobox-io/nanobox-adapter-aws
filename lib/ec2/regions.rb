@@ -7,85 +7,85 @@ module ::EC2
       id: 'us-east-1', 
       name: 'US East (N. Virginia)',
       short: 'N. Virginia',
-      ami: 'ami-6edd3078'
+      ami: 'ami-cd0f5cb6'
     },
     'us-east-2' => {
       id: 'us-east-2',
       name: 'US East (Ohio)',
       short: 'Ohio',
-      ami: 'ami-fcc19b99'
+      ami: 'ami-10547475'
     },
     'us-west-1' => {
       id: 'us-west-1',
       name: 'US West (N. California)',
       short: 'N. California',
-      ami: 'ami-539ac933'
+      ami: 'ami-09d2fb69'
     },
     'us-west-2' => {
       id: 'us-west-2',
       name: 'US West (Oregon)',
       short: 'Oregon',
-      ami: 'ami-7c803d1c'
+      ami: 'ami-6e1a0117'
     },
     'ca-central-1' => {
       id: 'ca-central-1',
       name: 'Canada Central (Montreal)',
       short: 'Central',
-      ami: 'ami-3d299b59'
+      ami: 'ami-b3d965d7'
     },
     'eu-west-1' => {
       id: 'eu-west-1',
       name: 'EU West (Ireland)',
       short: 'Ireland',
-      ami: 'ami-d8f4deab'
+      ami: 'ami-785db401'
     },
     'eu-central-1' => {
       id: 'eu-central-1',
       name: 'EU Central (Frankfurt)',
       short: 'Frankfurt',
-      ami: 'ami-5aee2235'
+      ami: 'ami-1e339e71'
     },
     'eu-west-2' => {
       id: 'eu-west-2',
       name: 'EU West (London)',
       short: 'London',
-      ami: 'ami-ede2e889'
+      ami: 'ami-996372fd'
     },
     'ap-southeast-1' => {
       id: 'ap-southeast-1',
       name: 'Asia Pacific (Singapore)',
       short: 'Singapore',
-      ami: 'ami-b1943fd2'
+      ami: 'ami-6f198a0c'
     },
     'ap-southeast-2' => {
       id: 'ap-southeast-2',
       name: 'Asia Pacific (Sydney)',
       short: 'Sydney',
-      ami: 'ami-fe71759d'
+      ami: 'ami-e2021d81'
     },
     'ap-northeast-2' => {
       id: 'ap-northeast-2',
       name: 'Asia Pacific (Seoul)',
       short: 'Seoul',
-      ami: 'ami-93d600fd'
+      ami: 'ami-d28a53bc'
     },
     'ap-northeast-1' => {
       id: 'ap-northeast-1',
       name: 'Asia Pacific (Tokyo)',
       short: 'Tokyo',
-      ami: 'ami-eb49358c'
+      ami: 'ami-ea4eae8c'
     },
     'ap-south-1' => {
       id: 'ap-south-1',
       name: 'Asia Pacific (Mumbai)',
       short: 'Mumbai',
-      ami: 'ami-dd3442b2'
+      ami: 'ami-099fe766'
     },
     'sa-east-1' => {
       id: 'sa-east-1',
       name: 'South America (São Paulo)',
       short: 'São Paulo',
-      ami: 'ami-7379e31f'
+      ami: 'ami-10186f7c'
     }
   }
   
