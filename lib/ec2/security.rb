@@ -84,21 +84,21 @@ class ::EC2::Security
       # add inbound policies for tcp and udp
       ['tcp', 'udp'].each do |protocol|
         manager.AuthorizeSecurityGroupIngress(
-          'GroupId'     => id,
-          'IpProtocol'  => protocol,
-          'FromPort'    => '0',
-          'ToPort'      => '65535',
-          'CidrIp'      => '0.0.0.0/0'
+          'GroupId'                           => id,
+          'IpPermissions.1.IpProtocol'        => protocol,
+          'IpPermissions.1.FromPort'          => '0',
+          'IpPermissions.1.ToPort'            => '65535',
+          'IpPermissions.1.IpRanges.1.CidrIp' => '0.0.0.0/0'
         )
       end
 
       # now allow icmp (ping)
       manager.AuthorizeSecurityGroupIngress(
-        'GroupId'     => id,
-        'IpProtocol'  => 'icmp',
-        'FromPort'    => '-1',
-        'ToPort'      => '-1',
-        'CidrIp'      => '0.0.0.0/0'
+        'GroupId'                           => id,
+        'IpPermissions.1.IpProtocol'        => 'icmp',
+        'IpPermissions.1.FromPort'          => '-1',
+        'IpPermissions.1.ToPort'            => '-1',
+        'IpPermissions.1.IpRanges.1.CidrIp' => '0.0.0.0/0'
       )
     end
   end
@@ -119,21 +119,21 @@ class ::EC2::Security
       # add outbound policy for tcp and udp
       ['tcp', 'udp'].each do |protocol|
         manager.AuthorizeSecurityGroupEgress(
-          'GroupId'     => id,
-          'IpProtocol'  => protocol,
-          'FromPort'    => '0',
-          'ToPort'      => '65535',
-          'CidrIp'      => '0.0.0.0/0'
+          'GroupId'                           => id,
+          'IpPermissions.1.IpProtocol'        => protocol,
+          'IpPermissions.1.FromPort'          => '0',
+          'IpPermissions.1.ToPort'            => '65535',
+          'IpPermissions.1.IpRanges.1.CidrIp' => '0.0.0.0/0'
         )
       end
 
       # now allow outbound icmp (ping)
       manager.AuthorizeSecurityGroupEgress(
-        'GroupId'     => id,
-        'IpProtocol'  => 'icmp',
-        'FromPort'    => '-1',
-        'ToPort'      => '-1',
-        'CidrIp'      => '0.0.0.0/0'
+        'GroupId'                           => id,
+        'IpPermissions.1.IpProtocol'        => 'icmp',
+        'IpPermissions.1.FromPort'          => '-1',
+        'IpPermissions.1.ToPort'            => '-1',
+        'IpPermissions.1.IpRanges.1.CidrIp' => '0.0.0.0/0'
       )
     end
   end
