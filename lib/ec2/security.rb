@@ -112,7 +112,7 @@ class ::EC2::Security
         'CidrIp'      => '0.0.0.0/0'
       )
     rescue RightScale::CloudApi::HttpError => e
-      if not e.message =~ /InvalidPermission\.Malformed/
+      if not e.message =~ /InvalidPermission\.Malformed|UnknownParameter/
         raise
       end
 
