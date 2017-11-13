@@ -55,17 +55,57 @@ class ::EC2::Security
       name:         group["groupName"],
       description:  group["groupDescription"],
       inbound:      !group["ipPermissions"].nil?,
-      outbound:     !group["ipPermissionsEgress"].nil?
+      outbound:     !group["ipPermissionsEgress"].nil?,
+      vpc_id:       group["vpcId"]
     }
   end
 
   def create_group
     res = manager.CreateSecurityGroup(
       'GroupDescription' => 'Simple security group policy for Nanobox apps.',
-      'GroupName' => 'Nanobox'
+      'GroupName' => 'Nanobox',
+      'VpcId' => get_vpc_id
     )
 
     fetch_group
+  end
+
+  def get_vpc_id
+    # Retrieve the default VPC.
+    # If needed, fall back to the first non-default VPC.
+    # If _still_ needed, fall back to creating a new VPC.
+    res = manager.DescribeVpcs(
+      'Filter' => [
+        {'Name' => 'state', 'Value' => 'available'},
+        {'Name' => 'isDefault', 'Value' => true}
+      ]
+    )
+    vpc_info = res["DescribeVpcsResponse"]["vpcSet"]
+
+    if not vpc_info
+      res = manager.DescribeVpcs(
+        'Filter' => [
+          {'Name' => 'state', 'Value' => 'available'}
+        ]
+      )
+      vpc_info = res["DescribeVpcsResponse"]["vpcSet"]
+
+      if not vpc_info
+        res = manager.CreateVpc('CidrBlock' => '10.10.0.0/16')
+        vpc_id = res["CreateVpcResponse"]["vpc"]["vpcId"]
+
+        res = manager.CreateSubnet(
+          'CidrBlock' => '10.10.0.0/16',
+          'VpcId' => vpc_id
+        )
+
+        vpc_id
+      else
+        vpc_info["item"][0]["vpcId"]
+      end
+    else
+      vpc_info["item"]["vpcId"]
+    end
   end
 
   def set_inbound_policy(id)

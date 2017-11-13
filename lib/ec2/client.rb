@@ -85,7 +85,8 @@ class ::EC2::Client
       ami: ami,
       availability_zone: az,
       key: key,
-      security_group: group[:id]
+      security_group: group[:id],
+      vpc: group[:vpc_id]
     }
 
     compute.run_instance(meta)
