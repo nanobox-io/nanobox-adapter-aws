@@ -87,7 +87,7 @@ class ::EC2::Compute
       'KeyName'            => attrs[:key],
       'InstanceType'       => attrs[:size],
       'SecurityGroupId'    => [attrs[:security_group]],
-      'SubnetId'           => get_subnet(attrs[:vpc], attrs[:availability_zone]),
+      'SubnetId'           => get_subnet(attrs[:vpc], attrs[:availability_zone])['subnetId'],
       'Placement'          => {
         'AvailabilityZone' => attrs[:availability_zone],
         'Tenancy'          => 'default'
@@ -209,19 +209,19 @@ class ::EC2::Compute
   end
 
   def create_subnet(vpc, az)
-    network = {
+    network = az.nil? ? 72 : {
       'a' =>  0, 'b' =>  2, 'c' =>  4, 'd' =>  6, 'e' =>  8, 'f' => 10,
       'g' => 12, 'h' => 14, 'i' => 16, 'j' => 18, 'k' => 20, 'l' => 22,
       'm' => 24, 'n' => 26, 'o' => 28, 'p' => 30, 'q' => 32, 'r' => 34,
       's' => 26, 't' => 38, 'u' => 40, 'v' => 42, 'w' => 44, 'x' => 46,
       'y' => 48, 'z' => 50, '0' => 52, '1' => 54, '2' => 56, '3' => 58,
       '4' => 60, '5' => 62, '6' => 64, '7' => 66, '8' => 68, '9' => 70,
-    }
+    }[az[-1,1]]
 
     res = manager.CreateSubnet(
       'AvailabilityZone' => az,
       'VpcId' => vpc,
-      'CidrBlock' => "10.10.#{network[az[-1,1]]}.0/24"
+      'CidrBlock' => "10.10.#{network}.0/24"
     )
 
     get_subnet(vpc, az)

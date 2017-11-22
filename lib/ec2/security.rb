@@ -6,6 +6,7 @@ class ::EC2::Security
 
   def initialize(manager)
     @manager = manager
+    @vpc_id = get_vpc_id
   end
 
   def permission?
@@ -42,7 +43,10 @@ class ::EC2::Security
   private
 
   def fetch_group
-    filter     = [{'Name' => 'group-name', 'Value' => 'Nanobox'}]
+    filter     = [
+      {'Name' => 'group-name', 'Value' => 'Nanobox'},
+      {'Name' => 'vpc-id', 'Value' => @vpc_id}
+    ]
     res        = manager.DescribeSecurityGroups('Filter' => filter)
     group_info = res["DescribeSecurityGroupsResponse"]["securityGroupInfo"]
 
@@ -64,7 +68,7 @@ class ::EC2::Security
     res = manager.CreateSecurityGroup(
       'GroupDescription' => 'Simple security group policy for Nanobox apps.',
       'GroupName' => 'Nanobox',
-      'VpcId' => get_vpc_id
+      'VpcId' => @vpc_id
     )
 
     fetch_group
