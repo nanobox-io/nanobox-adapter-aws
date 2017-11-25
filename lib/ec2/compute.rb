@@ -218,10 +218,18 @@ class ::EC2::Compute
       '4' => 60, '5' => 62, '6' => 64, '7' => 66, '8' => 68, '9' => 70,
     }[az[-1,1]]
 
+    res = manager.DescribeVpcs(
+      'Filter' => [
+        {'Name'  => 'vpc-id', 'Value' => vpc}
+      ]
+    )
+    block = res["DescribeVpcsResponse"]["vpcSet"]["item"]["cidrBlock"]
+    prefix = /^(\d+\.\d+)\./.match(block)[1]
+
     res = manager.CreateSubnet(
       'AvailabilityZone' => az,
       'VpcId' => vpc,
-      'CidrBlock' => "10.10.#{network}.0/24"
+      'CidrBlock' => "#{prefix}.#{network}.0/24"
     )
 
     get_subnet(vpc, az)
