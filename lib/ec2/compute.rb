@@ -152,7 +152,7 @@ class ::EC2::Compute
     # this account AND have a default subnet. Querying the subnets for
     # default-for-az finds this list pretty quickly
 
-    # filter the collection to just nanobox instances
+    # filter the collection to just zones with default subnets
     filter = [{'Name'  => 'default-for-az', 'Value' => 'true'}]
 
     # query the api
@@ -160,22 +160,43 @@ class ::EC2::Compute
 
     subnets = res['DescribeSubnetsResponse']['subnetSet']
 
-    # if we don't have any default subnets, let's return an empty set
-    return [] if subnets.nil?
-
-    # subnets might not be a collection, but a single item
-    collection = begin
-      if subnets['item'].is_a? Array
-        subnets['item']
-      else
-        [subnets['item']]
-      end
-    end
-
     availability_zones = []
 
-    collection.each do |subnet|
-      availability_zones << subnet['availabilityZone']
+    # if we don't have any default subnets, let's return all AZs instead
+    if subnets.nil?
+      # filter the collection to just available zones
+      filter = [{'Name' => 'state', 'Value' => 'available'}]
+
+      # query the api
+      res = manager.DescribeAvailabilityZones('Filter' => filter)
+
+      azs = res['DescribeAvailabilityZonesResponse']['availabilityZoneInfo']
+
+      # azs might not be a collection, but a single item
+      collection = begin
+        if azs['item'].is_a? Array
+          azs['item']
+        else
+          [azs['item']]
+        end
+      end
+
+      collection.each do |az|
+        availability_zones << az['zoneName']
+      end
+    else
+      # subnets might not be a collection, but a single item
+      collection = begin
+        if subnets['item'].is_a? Array
+          subnets['item']
+        else
+          [subnets['item']]
+        end
+      end
+
+      collection.each do |subnet|
+        availability_zones << subnet['availabilityZone']
+      end
     end
 
     availability_zones.uniq.sort
@@ -184,40 +205,41 @@ class ::EC2::Compute
   private
 
   def get_subnet(vpc, az)
-    res = manager.DescribeSubnets(
-      'Filter' => [
-        {'Name'  => 'availability-zone', 'Value' => az},
-        {'Name'  => 'vpc-id', 'Value' => vpc}
-      ]
-    )
+    for i in 1..5
+      res = manager.DescribeSubnets(
+        'Filter' => [
+          {'Name'  => 'availability-zone', 'Value' => az},
+          {'Name'  => 'vpc-id', 'Value' => vpc}
+        ]
+      )
 
-    subnets = res['DescribeSubnetsResponse']['subnetSet']
+      subnets = res['DescribeSubnetsResponse']['subnetSet']
 
-    if not subnets
-      return create_subnet(vpc, az)
-    end
+      if subnets
+        subnet_list = begin
+          if subnets['item'].is_a? Array
+            subnets['item']
+          else
+            [subnets['item']]
+          end
+        end
 
-    subnet = begin
-      if subnets['item'].is_a? Array
-        subnets['item'][0]
-      else
-        subnets['item']
+        subnet_list.select do |subnet|
+          subnet['mapPublicIpOnLaunch'] == 'true'
+        end
+
+        break if not subnet_list.empty?
       end
+
+      create_subnet(vpc, az)
     end
 
-    subnet
+    return nil if subnet_list.empty?
+
+    subnet_list.first
   end
 
   def create_subnet(vpc, az)
-    network = az.nil? ? 72 : {
-      'a' =>  0, 'b' =>  2, 'c' =>  4, 'd' =>  6, 'e' =>  8, 'f' => 10,
-      'g' => 12, 'h' => 14, 'i' => 16, 'j' => 18, 'k' => 20, 'l' => 22,
-      'm' => 24, 'n' => 26, 'o' => 28, 'p' => 30, 'q' => 32, 'r' => 34,
-      's' => 26, 't' => 38, 'u' => 40, 'v' => 42, 'w' => 44, 'x' => 46,
-      'y' => 48, 'z' => 50, '0' => 52, '1' => 54, '2' => 56, '3' => 58,
-      '4' => 60, '5' => 62, '6' => 64, '7' => 66, '8' => 68, '9' => 70,
-    }[az[-1,1]]
-
     res = manager.DescribeVpcs(
       'Filter' => [
         {'Name'  => 'vpc-id', 'Value' => vpc}
@@ -226,13 +248,36 @@ class ::EC2::Compute
     block = res["DescribeVpcsResponse"]["vpcSet"]["item"]["cidrBlock"]
     prefix = /^(\d+\.\d+)\./.match(block)[1]
 
-    res = manager.CreateSubnet(
-      'AvailabilityZone' => az,
-      'VpcId' => vpc,
-      'CidrBlock' => "#{prefix}.#{network}.0/24"
-    )
+    start = az.nil? ? 72 : {
+      'a' =>  0, 'b' =>  2, 'c' =>  4, 'd' =>  6, 'e' =>  8, 'f' => 10,
+      'g' => 12, 'h' => 14, 'i' => 16, 'j' => 18, 'k' => 20, 'l' => 22,
+      'm' => 24, 'n' => 26, 'o' => 28, 'p' => 30, 'q' => 32, 'r' => 34,
+      's' => 26, 't' => 38, 'u' => 40, 'v' => 42, 'w' => 44, 'x' => 46,
+      'y' => 48, 'z' => 50, '0' => 52, '1' => 54, '2' => 56, '3' => 58,
+      '4' => 60, '5' => 62, '6' => 64, '7' => 66, '8' => 68, '9' => 70,
+    }[az[-1,1]]
 
-    get_subnet(vpc, az)
+    for network in start..255
+      begin
+        res = manager.CreateSubnet(
+          'AvailabilityZone' => az,
+          'VpcId' => vpc,
+          'CidrBlock' => "#{prefix}.#{network}.0/24"
+        )
+      rescue
+        puts $!#, $@
+        next
+      end
+      break
+    end
+
+    subnet_id = res['CreateSubnetResponse']['subnet']['subnetId']
+
+    res = manager.ModifySubnetAttribute(
+      :options => {:api_version => '2016-11-15'},
+      'SubnetId' => subnet_id,
+      'MapPublicIpOnLaunch' => 'true'
+    )
   end
 
   def process_instance(data)
