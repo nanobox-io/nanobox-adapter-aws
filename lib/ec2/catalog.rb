@@ -82,6 +82,7 @@ class ::EC2::Catalog
           family        = option['family']
           family_id     = family.downcase.gsub(/ /, '_')
           instance_type = option['instance_type']
+          virt_types    = option['linux_virtualization_types']
           cpus          = option['vCPU'].to_f / 4
           memory        = (option['memory'] * 1024).to_i
           disk          = calculate_disk(memory)
@@ -148,7 +149,7 @@ class ::EC2::Catalog
           if not map.has_key? instance_type
             map[instance_type] = {
               disk: disk,
-              hvm: option['linux_virtualization_types'].include?('HVM')
+              hvm: (virt_types.include?('HVM') or virt_types.empty?)
             }
           end
         end
