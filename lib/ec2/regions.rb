@@ -7,99 +7,106 @@ module ::EC2
       id: 'us-east-1',
       name: 'US East (N. Virginia)',
       short: 'N. Virginia',
-      hvm_ami: 'ami-da05a4a0',
-      pv_ami: 'ami-0309a879'
+      hvm_ami: 'ami-6dfe5010',
+      pv_ami: 'ami-3cf85641'
     },
     'us-east-2' => {
       id: 'us-east-2',
       name: 'US East (Ohio)',
       short: 'Ohio',
-      hvm_ami: 'ami-336b4456',
-      pv_ami: 'ami-b16c43d4'
+      hvm_ami: 'ami-e82a1a8d',
+      pv_ami: 'ami-4c281829'
     },
     'us-west-1' => {
       id: 'us-west-1',
       name: 'US West (N. California)',
       short: 'N. California',
-      hvm_ami: 'ami-1c1d217c',
-      pv_ami: 'ami-cb1d21ab'
+      hvm_ami: 'ami-493f2f29',
+      pv_ami: 'ami-e1203081'
     },
     'us-west-2' => {
       id: 'us-west-2',
       name: 'US West (Oregon)',
       short: 'Oregon',
-      hvm_ami: 'ami-0a00ce72',
-      pv_ami: 'ami-d000cea8'
+      hvm_ami: 'ami-ca89eeb2',
+      pv_ami: 'ami-5c97f024'
     },
     'ca-central-1' => {
       id: 'ca-central-1',
       name: 'Canada Central (Montreal)',
       short: 'Central',
-      hvm_ami: 'ami-8a71c9ee',
-      pv_ami: 'ami-5670c832'
+      hvm_ami: 'ami-9d7afcf9',
+      pv_ami: 'ami-9c7afcf8'
     },
     'eu-west-1' => {
       id: 'eu-west-1',
       name: 'EU West (Ireland)',
       short: 'Ireland',
-      hvm_ami: 'ami-add175d4',
-      pv_ami: 'ami-4dd07434'
+      hvm_ami: 'ami-74e6b80d',
+      pv_ami: 'ami-91e7b9e8'
     },
     'eu-central-1' => {
       id: 'eu-central-1',
       name: 'EU Central (Frankfurt)',
       short: 'Frankfurt',
-      hvm_ami: 'ami-97e953f8',
-      pv_ami: 'ami-7cef5513'
+      hvm_ami: 'ami-cd491726',
+      pv_ami: 'ami-a649174d'
     },
     'eu-west-2' => {
       id: 'eu-west-2',
       name: 'EU West (London)',
       short: 'London',
-      hvm_ami: 'ami-ecbea388',
-      pv_ami: 'ami-36b8a552'
+      hvm_ami: 'ami-506e8f37',
+      pv_ami: 'ami-0871906f'
+    },
+    'eu-west-3' => {
+      id: 'eu-west-3',
+      name: 'EU West 3',
+      short: 'eu west 3',
+      hvm_ami: 'ami-9a03b5e7',
+      pv_ami: ''
     },
     'ap-southeast-1' => {
       id: 'ap-southeast-1',
       name: 'Asia Pacific (Singapore)',
       short: 'Singapore',
-      hvm_ami: 'ami-67a6e604',
-      pv_ami: 'ami-f5a7e796'
+      hvm_ami: 'ami-82c9ecfe',
+      pv_ami: 'ami-e4ceeb98'
     },
     'ap-southeast-2' => {
       id: 'ap-southeast-2',
       name: 'Asia Pacific (Sydney)',
       short: 'Sydney',
-      hvm_ami: 'ami-41c12e23',
-      pv_ami: 'ami-59c12e3b'
+      hvm_ami: 'ami-2b12dc49',
+      pv_ami: 'ami-5b10de39'
     },
     'ap-northeast-2' => {
       id: 'ap-northeast-2',
       name: 'Asia Pacific (Seoul)',
       short: 'Seoul',
-      hvm_ami: 'ami-7b1cb915',
-      pv_ami: 'ami-761cb918'
+      hvm_ami: 'ami-633d920d',
+      pv_ami: 'ami-d0208fbe'
     },
     'ap-northeast-1' => {
       id: 'ap-northeast-1',
       name: 'Asia Pacific (Tokyo)',
       short: 'Tokyo',
-      hvm_ami: 'ami-15872773',
-      pv_ami: 'ami-348b2b52'
+      hvm_ami: 'ami-60a4b21c',
+      pv_ami: 'ami-51a5b32d'
     },
     'ap-south-1' => {
       id: 'ap-south-1',
       name: 'Asia Pacific (Mumbai)',
       short: 'Mumbai',
-      hvm_ami: 'ami-bc0d40d3',
-      pv_ami: 'ami-7e0d4011'
+      hvm_ami: 'ami-dba580b4',
+      pv_ami: 'ami-e8a08587'
     },
     'sa-east-1' => {
       id: 'sa-east-1',
       name: 'South America (São Paulo)',
       short: 'São Paulo',
-      hvm_ami: 'ami-466b132a',
-      pv_ami: 'ami-7d6a1211'
+      hvm_ami: 'ami-5782d43b',
+      pv_ami: 'ami-5b85d337'
     }
   }
 
