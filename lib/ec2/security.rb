@@ -99,16 +99,20 @@ class ::EC2::Security
         vpc_id = res["CreateVpcResponse"]["vpc"]["vpcId"]
 
         res = manager.CreateSubnet(
-          'CidrBlock' => '10.10.0.0/16',
+          'CidrBlock' => '10.10.0.0/24',
           'VpcId' => vpc_id
         )
 
-        vpc_id
-      else
-        vpc_info["item"][0]["vpcId"]
+        return vpc_id
       end
-    else
-      vpc_info["item"]["vpcId"]
+    end
+
+    if vpc_info
+      if vpc_info["item"].is_a? Array
+        vpc_info["item"][0]["vpcId"]
+      else
+        vpc_info["item"]["vpcId"]
+      end
     end
   end
 
